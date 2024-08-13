@@ -3,8 +3,12 @@ import { models } from "powerbi-client";
 
 const PowerBIFilter = ({ inputValue, report }) => {
   useEffect(() => {
-    if (report && inputValue) {
-      applyFilters(inputValue);
+    if (report) {
+      if (inputValue) {
+        applyFilters(inputValue);
+      } else {
+        resetFilters();
+      }
     }
   }, [inputValue, report]);
 
@@ -22,6 +26,13 @@ const PowerBIFilter = ({ inputValue, report }) => {
       .updateFilters(models.FiltersOperations.Replace, filters)
       .then(() => console.log("Filters applied"))
       .catch((errors) => console.error("Error applying filters:", errors));
+  };
+
+  const resetFilters = () => {
+    report
+      .updateFilters(models.FiltersOperations.RemoveAll)
+      .then(() => console.log("Filters reset"))
+      .catch((errors) => console.error("Error resetting filters:", errors));
   };
 
   return null; // This component does not render anything
